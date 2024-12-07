@@ -1,11 +1,7 @@
 // STYLE
-// import '@gouvfr/dsfr/dist/dsfr.css';
-// import "@gouvfr/dsfr/dist/utility/icons/icons.main.min.css";
 import '../stylesheets/style.scss';
 
 // JAVASCRIPT
-// import "@gouvfr/dsfr/dist/dsfr/dsfr.module";
-
 import App from './entities/Framework';
 
 const app = new App({
@@ -14,8 +10,8 @@ const app = new App({
 
   events: {
     onclick: {
-      add: (state, actions, view) => view.result.innerHTML = actions.ajoute(state).value,
-      sub: (state, actions, view) => view.result.innerHTML = actions.soustrait(state).value
+      add: ({ state, actions, $ }) => $.result.innerHTML = actions.ajoute(state).value,
+      sub: ({ state, actions, $ }) => $.result.innerHTML = actions.soustrait(state).value
     }
   },
 
@@ -23,14 +19,14 @@ const app = new App({
 
   ajoute: (state) => {
     state.value++;
-    return state;
   },
 
   soustrait(state) {
     state.value--;
-    return state;
   }
 
 });
+
+window.app = app;
 
 

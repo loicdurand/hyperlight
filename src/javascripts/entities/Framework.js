@@ -1,6 +1,11 @@
-import IdCreator from "./IdCreator";
+function* id_creator() {
+  let i = 0;
+  while (true) yield i++;
+}
 
-const is_function = fn => ['[object AsyncFunction]', '[object Function]'].includes(({}).toString.call(fn));
+const // 
+  ids = id_creator(),
+  is_function = fn => ['[object AsyncFunction]', '[object Function]'].includes(({}).toString.call(fn));
 
 export default class {
 
@@ -9,7 +14,8 @@ export default class {
 
   state = {};
   actions = {};
-  view = {};
+  dom = {};
+  $;
 
   constructor({ container, events, ...options }) {
 
@@ -20,7 +26,7 @@ export default class {
       elts = ctnr.querySelectorAll('[id]');
 
     elts.forEach(elt => {
-      this.view[elt.getAttribute('id')] = elt
+      this.dom[elt.getAttribute('id')] = elt
     });
 
     for (let option in options) {
@@ -54,17 +60,19 @@ export default class {
           target = document.getElementById(id);
 
         target.addEventListener(evt, e => {
-          fn(this.state, this.actions, this.view);
+          fn(this);
         });
       }
     }
+
+    this.$ = this.dom;
 
     return this;
 
   }
 
   set id(value) {
-    this.#id = IdCreator();
+    this.#id = this.#get_id();
   }
 
   get id() {
@@ -77,6 +85,10 @@ export default class {
 
   get container() {
     return this.#container;
+  }
+
+  #get_id() {
+    return ids.next().value;
   }
 
 
