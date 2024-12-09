@@ -10,8 +10,8 @@ const app = new App({
 
   events: {
     onclick: {
-      add: ({ state, actions, $ }) => $.result.innerHTML = actions.ajoute(state).value,
-      sub: ({ state, actions, $ }) => $.result.innerHTML = actions.soustrait(state).value
+      '#add': ({ state, actions, $ }) => $('#result').innerHTML = actions.ajoute(state).value,
+      '[name="sub"]': ({ state, actions, $ }) => $('#result').innerHTML = actions.soustrait(state).value
     }
   },
 
@@ -23,6 +23,10 @@ const app = new App({
 
   soustrait(state) {
     state.value--;
+  },
+
+  config: {
+    attributes_to_watch: ['id', 'class', 'name']
   }
 
 });

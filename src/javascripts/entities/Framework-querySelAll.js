@@ -20,7 +20,7 @@ export default class {
   dom = {};
   $;
 
-  constructor({ container, events, dom_method = 'getElementById', ...attrs }, config = {}) {
+  constructor({ container, events, config = {}, ...attrs }) {
 
     this.id = 'random';
     this.dom_method = config.dom_method || 'getElementById';
@@ -30,14 +30,11 @@ export default class {
 
     this.#attributes_to_watch.forEach(attr_name => {
       const elts = ctnr.querySelectorAll(`[${attr_name}]`);
-      console.log({ elts });
       elts.forEach(elt => {
         const attr_value = elt.getAttribute(attr_name);
         this.dom[this.#getAttribute(attr_name, attr_value)] = elt;
       });
     });
-
-    console.log({dom:this.dom});
 
     for (let attr in attrs) {
       if (is_function(attrs[attr])) {
@@ -64,13 +61,10 @@ export default class {
         evt = event_name.substring(2),
         targets = events[event_name];
 
-      console.log({ targets });
-
       for (let selector in targets) {
         const // 
           fn = targets[selector],
           triggers = document.querySelectorAll(selector);
-        console.log({ selector, triggers });
 
         triggers.forEach(target => {
           target.addEventListener(evt, e => {
@@ -80,7 +74,7 @@ export default class {
       }
     }
 
-    this.$ = this.dom;
+    this.$ = selector => this.dom[selector];
 
     return this;
 
@@ -124,8 +118,5 @@ export default class {
   #get_id() {
     return ids.next().value;
   }
-
-
-
 
 }

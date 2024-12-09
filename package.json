@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "npx nodemon -e hbs bin/www",
-    "watch": "npx parcel src/javascripts/index.js",
+    "watch": "npx parcel src/javascripts/*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
