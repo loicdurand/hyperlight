@@ -2,27 +2,61 @@
 import '../stylesheets/style.scss';
 
 // JAVASCRIPT
-import App from './entities/Framework-querySelAll';
+import App from './entities/Framework';
 
 const app = new App({
 
   container: 'app',
 
   events: {
-    onclick: {
-      add: ({ state, actions, $ }) => $.result.innerHTML = actions.ajoute(state).value,
-      sub: ({ state, actions, $ }) => $.result.innerHTML = actions.soustrait(state).value
+
+    onclick: (actions) => ({
+      //
+      add_a: actions.add_a,
+      sub_a: actions.sub_a,
+      //
+      add_b: actions.add_b,
+      sub_b: actions.sub_b
+      //
+    }),
+
+    onupdate: ({ state, view: $ }) => {
+      //
+      $.a.innerText = state.a;
+      $.b.innerText = state.b;
+      $.somme.value = state.somme;
+      $.produit.value = state.produit;
+      //
     }
   },
 
-  value: 0,
+  a: 0,
+  b: 0,
+  somme: 0,
+  produit: 0,
 
-  ajoute: (state) => {
-    state.value++;
+  add_a: (state) => {
+    state.a++;
+    state.somme++;
+    state.produit = state.a * state.b;
   },
 
-  soustrait(state) {
-    state.value--;
+  sub_a(state) {
+    state.a--;
+    state.somme--;
+    state.produit = state.a * state.b;
+  },
+
+  add_b: (state) => {
+    state.b++;
+    state.somme++;
+    state.produit = state.a * state.b;
+  },
+
+  sub_b(state) {
+    state.b--;
+    state.somme--;
+    state.produit = state.a * state.b;
   }
 
 });

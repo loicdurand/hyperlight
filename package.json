@@ -4,7 +4,6 @@
   "description": "",
   "main": "dist/app.js",
   "dependencies": {
-    "@gouvfr/dsfr": "^1.12.1",
     "buffer": "^6.0.3",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -22,7 +21,7 @@
   },
   "scripts": {
     "start": "npx nodemon -e hbs bin/www",
-    "watch": "npx parcel src/javascripts/*.js",
+    "watch": "npx parcel src/javascripts/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

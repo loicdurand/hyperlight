@@ -11,39 +11,29 @@ export default class {
 
   #id;
   #container;
-  // config
-  #dom_method;
-  #attributes_to_watch;
+  #onupdate = () => void (0);
 
   state = {};
   actions = {};
-  dom = {};
-  $;
+  view = {};
 
-  constructor({ container, events, dom_method = 'getElementById', ...attrs }, config = {}) {
+  constructor({ container, events, ...options }) {
 
-    this.id = 'random';
-    this.dom_method = config.dom_method || 'getElementById';
-    this.attributes_to_watch = config.attributes_to_watch ?? ['id'];
+    this.#id = ids.next().value;
 
-    const ctnr = !container ? document : document[this.#dom_method](container);
+    const //
+      ctnr = !container ? document : document.getElementById(container),
+      elts = ctnr.querySelectorAll('[id]');
 
-    this.#attributes_to_watch.forEach(attr_name => {
-      const elts = ctnr.querySelectorAll(`[${attr_name}]`);
-      console.log({ elts });
-      elts.forEach(elt => {
-        const attr_value = elt.getAttribute(attr_name);
-        this.dom[this.#getAttribute(attr_name, attr_value)] = elt;
-      });
+    elts.forEach(elt => {
+      this.view[elt.getAttribute('id')] = elt
     });
 
-    console.log({dom:this.dom});
-
-    for (let attr in attrs) {
-      if (is_function(attrs[attr])) {
+    for (let option in options) {
+      if (is_function(options[option])) {
         const // 
-          fn_name = attr,
-          fn_content = attrs[attr];
+          fn_name = option,
+          fn_content = options[option];
 
         this.actions[fn_name] = arg => {
           const result = fn_content(arg);
@@ -52,42 +42,40 @@ export default class {
 
       } else {
         const // 
-          prop = attr,
-          value = attrs[attr];
+          prop = option,
+          value = options[option];
         this.state[prop] = value;
       }
 
     }
 
     for (let event_name in events) {
-      const //
-        evt = event_name.substring(2),
-        targets = events[event_name];
+      const evt = event_name.startsWith('on') ? event_name.substring(2) : event_name;
+      if (evt === 'update') {
+        this.#onupdate = ({ state, view }) => events[event_name]({ state, view });
+        this.#onupdate({ state: this.state, view: this.view });
 
-      console.log({ targets });
+      } else {
 
-      for (let selector in targets) {
-        const // 
-          fn = targets[selector],
-          triggers = document.querySelectorAll(selector);
-        console.log({ selector, triggers });
+        const targets = events[event_name](this.actions);
 
-        triggers.forEach(target => {
-          target.addEventListener(evt, e => {
-            fn(this);
+        for (let id in targets) {
+          const //
+            fn = targets[id],
+            target = document.getElementById(id);
+
+          target.addEventListener(evt, () => {
+
+            this.state = { ...(fn(this.state) || this.state) };
+            this.#onupdate({ state: this.state, view: this.view });
+
           });
-        });
+        }
       }
     }
 
-    this.$ = this.dom;
-
     return this;
 
-  }
-
-  set id(value) {
-    this.#id = this.#get_id();
   }
 
   get id() {
@@ -101,31 +89,5 @@ export default class {
   get container() {
     return this.#container;
   }
-
-  set dom_method(dom_method = 'getElementById') {
-    this.#dom_method = dom_method;
-  }
-
-  set attributes_to_watch(attributes_to_watch = ['id']) {
-    this.#attributes_to_watch = attributes_to_watch;
-  }
-
-  #getAttribute = (_attr_name, attr_value) => {
-    const // 
-      attr_name = (!['id', 'class'].includes(_attr_name)) ? 'other' : _attr_name,
-      refs = {
-        id: '#' + attr_value,
-        class: '.' + attr_value,
-        other: `[${_attr_name}="${attr_value}"]`
-      };
-    return refs[attr_name];
-  }
-
-  #get_id() {
-    return ids.next().value;
-  }
-
-
-
 
 }

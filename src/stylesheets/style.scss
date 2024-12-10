@@ -1,12 +1,6 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+@use './colors';
+@use './starter-complet';
 
-h1{
-  color: green !important;
-}
-
-a {
-  color: #00B7FF;
+.col input {
+  width: 100%;
 }

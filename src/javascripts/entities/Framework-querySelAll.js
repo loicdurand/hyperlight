@@ -33,6 +33,8 @@ export default class {
       elts.forEach(elt => {
         const attr_value = elt.getAttribute(attr_name);
         this.dom[this.#getAttribute(attr_name, attr_value)] = elt;
+        if (attr_name === 'id')
+          this.dom[attr_value] = elt;
       });
     });
 

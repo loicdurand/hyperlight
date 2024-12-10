@@ -6,7 +6,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/queryselall', function(req, res, next) {
+router.get('/qsa', function(req, res, next) {
   res.render('index-querySelAll', { title: 'Express' });
 });
 
