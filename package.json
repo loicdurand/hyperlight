@@ -20,7 +20,7 @@
     "typescript": "^5.7.2"
   },
   "scripts": {
-    "start": "npx nodemon -e hbs bin/www",
+    "start": "npx nodemon -w views -w routes -e hbs,js bin/www",
     "watch": "npx parcel src/javascripts/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
