@@ -21,8 +21,13 @@ export default class {
 
     this.#id = ids.next().value;
 
-    const ctnr = !container ? document : document.getElementById(container);
-    this.container = ctnr;
+    const //
+      ctnr = !container ? document : document.getElementById(container),
+      elts = ctnr.querySelectorAll('[id]');
+
+    elts.forEach(elt => {
+      this.view[elt.getAttribute('id')] = elt
+    });
 
     for (let option in options) {
       if (is_function(options[option])) {
@@ -47,26 +52,8 @@ export default class {
     for (let event_name in events) {
       const evt = event_name.startsWith('on') ? event_name.substring(2) : event_name;
       if (evt === 'update') {
-        // this.#onupdate = state => events[event_name](state);
-        this.#onupdate = ((state) => {
-          const //
-            todos = [],
-            selectors = events[event_name](state);
-          for (let sel in selectors) {
-            let selector = sel;
-            if (!/^#\.\[/.test(selector))
-              selector = '#' + selector;
-
-            const fn = selectors[sel];
-            todos.push((state) => {
-              const elts = this.container.querySelectorAll(selector);
-              return elts.forEach(elt => fn(elt, state));
-            });
-          }
-          return () => todos.forEach(todo => todo(this.state))
-        })(this.state);
-
-        this.#onupdate(this.state);
+        this.#onupdate = ({ state, view }) => events[event_name]({ state, view });
+        this.#onupdate({ state: this.state, view: this.view });
 
       } else {
 
@@ -78,6 +65,7 @@ export default class {
             target = document.getElementById(id);
 
           target.addEventListener(evt, () => {
+
             this.state = { ...(fn(this.state) || this.state) };
             this.#onupdate({ state: this.state, view: this.view });
 

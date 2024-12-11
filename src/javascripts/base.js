@@ -2,7 +2,7 @@
 import '../stylesheets/style.scss';
 
 // JAVASCRIPT
-import App from './entities/Framework';
+import App from './entities/base';
 
 const app = new App({
 
@@ -20,14 +20,14 @@ const app = new App({
       //
     }),
 
-    onupdate: () => ({
+    onupdate: ({ state, view: $ }) => {
       //
-      a: (target, state) => target.innerText = state.a,
-      b: (target, state) => target.innerText = state.b,
-      somme: (target, state) => target.value = state.somme,
-      produit: (target, state) => target.value = state.produit
+      $.a.innerText = state.a;
+      $.b.innerText = state.b;
+      $.somme.value = state.somme;
+      $.produit.value = state.produit;
       //
-    })
+    }
   },
 
   a: 0,
@@ -60,24 +60,6 @@ const app = new App({
   }
 
 });
-
-// const table = new App({
-
-//   container: 'table',
-
-//   events: {
-//     //   onclick
-//     onupdate
-//   },
-
-//   users: [{
-//     nom: 'doe', prenom: 'john', age: 20
-//   }],
-
-
-
-// })
-
 
 window.app = app;
 

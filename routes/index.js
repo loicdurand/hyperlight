@@ -10,6 +10,10 @@ router.get('/', function(req, res, next) {
   res.render('index', {...params});
 });
 
+router.get('/base', function(req, res, next) {
+  res.render('base', {...params});
+});
+
 router.get('/qsa', function(req, res, next) {
   res.render('index-querySelAll', {...params});
 });
