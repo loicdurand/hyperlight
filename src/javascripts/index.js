@@ -61,22 +61,62 @@ const app = new App({
 
 });
 
-// const table = new App({
+const // 
+  no_user_template = `
+  <tr>
+      <td
+        id="no-result"
+        colspan="4"
+      >Aucun résultat</td>
+  </tr>
+`,
+  user_template = (user) =>/*html*/`
+  <tr>
+    <td>${user.nom}</td>
+    <td>${user.prenom}</td>
+    <td>${user.age}</td>
+  </tr>
+`;
 
-//   container: 'table',
+const table = new App({
 
-//   events: {
-//     //   onclick
-//     onupdate
-//   },
+  container: 'table',
 
-//   users: [{
-//     nom: 'doe', prenom: 'john', age: 20
-//   }],
+  events: {
+    onclick: actions => ({
+      'create': actions.createUser,
+      'delete': actions.delUser
+    }),
 
+    onupdate: () => ({
+      //
+      'no-result': (target, state) => target.classList[state.users.length ? 'add' : 'remove']('hidden'),
+      'users': (target, state) => {
+        if (state.users.length)
+          target.innerHTML = state.users.map(user_template).join('');
+        else
+          target.innerHTML = no_user_template;
+      }
+      //
+    })
+  },
 
+  users: [],
 
-// })
+  createUser(state) {
+    state.users.push({
+      nom: 'doe', prenom: 'john', age: 20
+    });
+  },
+
+  delUser(state) {
+    console.log({ avant: state.users });
+    state.users.pop();
+    console.log({ apres: state.users });
+
+  }
+
+})
 
 
 window.app = app;

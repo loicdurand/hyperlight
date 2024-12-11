@@ -5,9 +5,10 @@ function* id_creator() {
 
 const // 
   ids = id_creator(),
+  is_array = arr => [].constructor === arr.constructor,
   is_function = fn => ['[object AsyncFunction]', '[object Function]'].includes(({}).toString.call(fn));
 
-export default class {
+class App {
 
   #id;
   #container;
@@ -17,7 +18,7 @@ export default class {
   actions = {};
   view = {};
 
-  constructor({ container, events, ...options }) {
+  constructor({ container, events = {}, ...options }) {
 
     this.#id = ids.next().value;
 
@@ -35,11 +36,15 @@ export default class {
           return this.state;
         }
 
-      } else {
+      } else if (['string', 'number'].includes(typeof options[option])) {
         const // 
           prop = option,
           value = options[option];
         this.state[prop] = value;
+      } else if (is_array(options[option])) {
+        console.log({ option, val: options[option] });
+        this.state[option]= options[option];
+        //this.#queue.push({ [option]: options[option] });
       }
 
     }
@@ -49,6 +54,7 @@ export default class {
       if (evt === 'update') {
         // this.#onupdate = state => events[event_name](state);
         this.#onupdate = ((state) => {
+          console.log({event_name});
           const //
             todos = [],
             selectors = events[event_name](state);
@@ -80,7 +86,6 @@ export default class {
           target.addEventListener(evt, () => {
             this.state = { ...(fn(this.state) || this.state) };
             this.#onupdate({ state: this.state, view: this.view });
-
           });
         }
       }
@@ -102,4 +107,6 @@ export default class {
     return this.#container;
   }
 
-}
+};
+
+export default App;

@@ -37,17 +37,23 @@
 
 <div class="row">
 
-  <table id="table">
+  <div class="col s3">
+    <button id="delete">-</button>
+    <button id="create">+</button>
+  </div>
+
+  <table
+    id="table"
+    class="col s12"
+  >
     <thead>
       <th>Action</th>
       <th>Nom</th>
       <th>Prénom</th>
       <th>Âge</th>
     </thead>
-    <tbody>
-      <tr>
-        <td colspan="4">Aucun résultat</td>
-      </tr>
+    <tbody id="users">
+      
     </tbody>
   </table>
 </div>
