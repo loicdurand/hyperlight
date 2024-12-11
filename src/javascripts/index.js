@@ -72,6 +72,9 @@ const //
 `,
   user_template = (user) =>/*html*/`
   <tr>
+    <td>
+      <button class="user_delete">-</button>
+    </td>
     <td>${user.nom}</td>
     <td>${user.prenom}</td>
     <td>${user.age}</td>
