@@ -58,12 +58,9 @@ class App {
           const //
             todos = [],
             selectors = events[event_name](state);
-          for (let sel in selectors) {
-            let selector = sel;
-            if (!/^[#\.\[]/.test(selector))
-              selector = '#' + selector;
+          for (let selector in selectors) {
 
-            const fn = selectors[sel];
+            const fn = selectors[selector];
             todos.push((state) => {
               const elts = this.container.querySelectorAll(selector);
               return elts.forEach(elt => fn(elt, state));
@@ -78,13 +75,10 @@ class App {
 
         const targets = events[event_name](this.actions);
 
-        for (let sel in targets) {
-          let selector = sel;
-          if (!/^[#\.\[]/.test(selector))
-            selector = '#' + selector;
+        for (let selector in targets) {
+          
           const //
-            fn = targets[sel],
-            t = !console.log([sel,selector]),
+            fn = targets[selector],
             _targets = document.querySelectorAll(selector);
 
           _targets.forEach(elt => elt.addEventListener(evt, () => {

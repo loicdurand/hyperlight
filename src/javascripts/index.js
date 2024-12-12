@@ -12,20 +12,20 @@ const app = new App({
 
     onclick: (actions) => ({
       //
-      add_a: actions.add_a,
-      sub_a: actions.sub_a,
+      '#add_a': actions.add_a,
+      '#sub_a': actions.sub_a,
       //
-      add_b: actions.add_b,
-      sub_b: actions.sub_b
+      '#add_b': actions.add_b,
+      '#sub_b': actions.sub_b
       //
     }),
 
     onupdate: () => ({
       //
-      a: (target, state) => target.innerText = state.a,
-      b: (target, state) => target.innerText = state.b,
-      somme: (target, state) => target.value = state.somme,
-      produit: (target, state) => target.value = state.produit
+      '#a': (target, state) => target.innerText = state.a,
+      '#b': (target, state) => target.innerText = state.b,
+      '#somme': (target, state) => target.value = state.somme,
+      '#produit': (target, state) => target.value = state.produit
       //
     })
   },
@@ -72,7 +72,9 @@ const //
 `,
   user_template = (user) => /*html*/`
   <tr>
-    <td>${user.id}</td>
+    <td>
+      <button data-index="${user.id}" class="del-this">-</button>
+    </td>
     <td>${user.nom}</td>
     <td>${user.prenom}</td>
     <td>${user.age}</td>
@@ -81,12 +83,12 @@ const //
 
 const table = new App({
 
-  container: 'table',
+  container: 'table-ctnr',
 
   events: {
     onclick: actions => ({
       '#create': actions.createUser,
-      'delete': actions.delUser
+      '.del-this': actions.delUser
     }),
 
     onupdate: () => ({
@@ -105,6 +107,7 @@ const table = new App({
   users: [],
 
   createUser(state) {
+    console.log('ici');
     state.users.push({
       id: state.users.length, nom: 'doe', prenom: 'john', age: 20
     });
