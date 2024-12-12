@@ -22,7 +22,7 @@ class App {
 
     this.#id = ids.next().value;
 
-    const ctnr = !container ? document : document.getElementById(container);
+    const ctnr = !container ? document : typeof container === 'string' ? document.getElementById(container) : container;
     this.#container = ctnr;
 
     for (let option in options) {
@@ -75,8 +75,6 @@ class App {
         if (!event_set)
           this.#container.addEventListener(evt, e => {
 
-            // targets = document.querySelectorAll(selector);
-
             Object.entries(selectors)
               .filter(([selector]) => e.target.matches(selector))
               .forEach(([selector]) => {
@@ -86,8 +84,8 @@ class App {
                 this.#onupdate({ state: this.state, view: this.view });
               });
 
-
           });
+
         event_set = true;
       }
     }
