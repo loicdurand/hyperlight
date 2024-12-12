@@ -42,9 +42,7 @@ class App {
           value = options[option];
         this.state[prop] = value;
       } else if (is_array(options[option])) {
-        console.log({ option, val: options[option] });
         this.state[option] = options[option];
-        //this.#queue.push({ [option]: options[option] });
       }
 
     }
@@ -53,9 +51,7 @@ class App {
     for (let event_name in events) {
       const evt = event_name.startsWith('on') ? event_name.substring(2) : event_name;
       if (evt === 'update') {
-        // this.#onupdate = state => events[event_name](state);
         this.#onupdate = ((state) => {
-          console.log({ event_name });
           const //
             todos = [],
             selectors = events[event_name](state);

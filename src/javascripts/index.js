@@ -75,6 +75,7 @@ const //
     <td>
       <button data-index="${user.id}" class="del-this">-</button>
     </td>
+    <td>${user.id}</td>
     <td>${user.nom}</td>
     <td>${user.prenom}</td>
     <td>${user.age}</td>
@@ -107,20 +108,16 @@ const table = new App({
   users: [],
 
   createUser(state) {
-    console.log('ici');
     state.users.push({
       id: state.users.length, nom: 'doe', prenom: 'john', age: 20
     });
-    return state;
   },
 
   delUser(state, { target }) {
-    const { dataset: { index } } = target;
-    console.log({ index });
-    state.users.pop();
-    console.log({ apres: state.users });
-    return state;
-
+    const // 
+      { dataset: { index } } = target,
+      position = state.users.findIndex(user => +user.index === +index);
+    state.users.splice(+position, 1);
   }
 
 })
