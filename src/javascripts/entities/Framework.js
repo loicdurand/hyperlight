@@ -1,6 +1,6 @@
 export default class App {
 
-  #onupdate=() => void (0);
+  #onupdate = () => void (0);
 
   state = {};
   actions = {};
