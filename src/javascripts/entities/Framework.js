@@ -1,6 +1,6 @@
 export default class App {
 
-  #onupdate;
+  #onupdate=() => void (0);
 
   state = {};
   actions = {};
@@ -10,7 +10,6 @@ export default class App {
   constructor({ container, events = {}, view = null, ...state }) {
 
     this.container = !container ? document : typeof container === 'string' ? document.getElementById(container) : container;
-    this.#onupdate = App.#is_function(view) ? view : () => void (0);
 
     Object.entries(state).forEach(([key, value]) => {
 
@@ -28,7 +27,7 @@ export default class App {
       .map(([event_name]) => [event_name, event_name.startsWith('on') ? event_name.substring(2) : event_name])
       .filter(([event_name, evt]) => {
 
-        if (evt !== 'update' && !this.view)
+        if (evt !== 'update')
           return true;
 
         const selectors = events[event_name](this.state);
