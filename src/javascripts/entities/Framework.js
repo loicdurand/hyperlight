@@ -31,8 +31,8 @@ class App {
           fn_name = option,
           fn_content = options[option];
 
-        this.actions[fn_name] = (arg, e) => {
-          const result = fn_content(arg, e);
+        this.actions[fn_name] = (state, target) => {
+          const result = fn_content(state, target);
           return this.state;
         }
 
@@ -60,7 +60,7 @@ class App {
             const fn = selectors[selector];
             todos.push((state) => {
               const elts = this.#container.querySelectorAll(selector);
-              return elts.forEach(elt => fn(elt, state));
+              return elts.forEach(target => fn(state, target));
             });
           }
           return () => todos.forEach(todo => todo(this.state))
@@ -82,7 +82,7 @@ class App {
               .forEach(([selector]) => {
                 const fn = selectors[selector];
 
-                this.state = { ...(fn(this.state, e) || this.state) };
+                this.state = { ...(fn(this.state, e.target) || this.state) };
                 this.#onupdate({ state: this.state, view: this.view });
               });
 

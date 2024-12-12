@@ -22,10 +22,10 @@ const app = new App({
 
     onupdate: () => ({
       //
-      '#a': (target, state) => target.innerText = state.a,
-      '#b': (target, state) => target.innerText = state.b,
-      '#somme': (target, state) => target.value = state.somme,
-      '#produit': (target, state) => target.value = state.produit
+      '#a': (state, target) => target.innerText = state.a,
+      '#b': (state, target) => target.innerText = state.b,
+      '#somme': (state, target) => target.value = state.somme,
+      '#produit': (state, target) => target.value = state.produit
       //
     })
   },
@@ -71,56 +71,84 @@ const //
   </tr>
 `,
   user_template = (user) => /*html*/`
-  <tr>
-    <td>
-      <button data-index="${user.id}" class="del-this">-</button>
-    </td>
-    <td>${user.id}</td>
-    <td>${user.nom}</td>
-    <td>${user.prenom}</td>
-    <td>${user.age}</td>
-  </tr>
-`;
+    <tr>
+      <td>
+        <button data-index="${user.id}" class="del-this">-</button>
+      </td>
+      <td>${user.id}</td>
+      <td>${user.nom}</td>
+      <td>${user.prenom}</td>
+      <td>${user.age}</td>
+    </tr>
+  `,
 
-const table = new App({
+  user = new App({
 
-  container: 'table-ctnr',
+    container: 'user-template',
 
-  events: {
-    onclick: actions => ({
-      '#create': actions.createUser,
-      '.del-this': actions.delUser
-    }),
+    id: 0,
+    nom: 'doe',
+    prenom: 'john',
+    age: 20,
 
-    onupdate: () => ({
-      //
-      'no-result': (target, state) => target.classList[state.users.length ? 'add' : 'remove']('hidden'),
-      '#users': (target, state) => {
-        if (state.users.length)
-          target.innerHTML = state.users.map(user_template).join('');
-        else
-          target.innerHTML = no_user_template;
-      }
-      //
-    })
-  },
+    setId(state) {
+      state.id++;
+    },
 
-  users: [],
+    remove(state, target) {
+      target.outerHTML = '';
+    },
 
-  createUser(state) {
-    state.users.push({
-      id: state.users.length, nom: 'doe', prenom: 'john', age: 20
-    });
-  },
+    events: {
+      onupdate: () => ({
+        '.user_id': (state, target) => target.innerText = state.id,
+        '.user_nom': (state, target) => target.innerText = state.nom,
+        '.user_prenom': (state, target) => target.innerText = state.prenom,
+        '.user_age': (state, target) => target.innerText = state.age,
+      })
+    }
 
-  delUser(state, { target }) {
-    const // 
-      { dataset: { index } } = target,
-      position = state.users.findIndex(user => +user.index === +index);
-    state.users.splice(+position, 1);
-  }
+  }),
 
-})
+  table = new App({
+
+    container: 'table-ctnr',
+
+    events: {
+      onclick: actions => ({
+        '#create': actions.createUser,
+        '.del-this': actions.delUser
+      }),
+
+      onupdate: () => ({
+        //
+        'no-result': (state, target) => target.classList[state.users.length ? 'add' : 'remove']('hidden'),
+        '#users': (state, target) => {
+          if (state.users.length)
+            target.innerHTML = state.users.map(user_template).join('');
+          else
+            target.innerHTML = no_user_template;
+        }
+        //
+      })
+    },
+
+    users: [],
+
+    createUser(state) {
+      state.users.push({
+        id: state.users.length, nom: 'doe', prenom: 'john', age: 20
+      });
+    },
+
+    delUser(state, target) {
+      const // 
+        { dataset: { index } } = target,
+        position = state.users.findIndex(user => +user.index === +index);
+      state.users.splice(+position, 1);
+    }
+
+  })
 
 
 window.app = app;
