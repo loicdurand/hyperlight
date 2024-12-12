@@ -1,111 +1,66 @@
-function* id_creator() {
-  let i = 0;
-  while (true) yield i++;
-}
+export default class App {
 
-const // 
-  ids = id_creator(),
-  is_array = arr => [].constructor === arr.constructor,
-  is_function = fn => ['[object AsyncFunction]', '[object Function]'].includes(({}).toString.call(fn));
-
-class App {
-
-  #id;
-  #container;
   #onupdate = () => void (0);
 
   state = {};
   actions = {};
   view = {};
+  container;
 
-  constructor({ container, events = {}, ...options }) {
+  constructor({ container, events = {}, ...state }) {
 
-    this.#id = ids.next().value;
+    this.container = !container ? document : typeof container === 'string' ? document.getElementById(container) : container;
 
-    const ctnr = !container ? document : typeof container === 'string' ? document.getElementById(container) : container;
-    this.#container = ctnr;
+    Object.entries(state).forEach(([key, value]) => {
 
-    for (let option in options) {
-      if (is_function(options[option])) {
-        const // 
-          fn_name = option,
-          fn_content = options[option];
+      if (!App.#is_function(value))
+        return this.state[key] = value;
 
-        this.actions[fn_name] = (state, target) => {
-          const result = fn_content(state, target);
-          return this.state;
-        }
-
-      } else if (['string', 'number'].includes(typeof options[option])) {
-        const // 
-          prop = option,
-          value = options[option];
-        this.state[prop] = value;
-      } else if (is_array(options[option])) {
-        this.state[option] = options[option];
+      this.actions[key] = (state, target) => {
+        value(state, target);
+        return this.state;
       }
 
-    }
+    });
 
-    let event_set = false;
-    for (let event_name in events) {
-      const evt = event_name.startsWith('on') ? event_name.substring(2) : event_name;
-      if (evt === 'update') {
-        this.#onupdate = ((state) => {
-          const //
-            todos = [],
-            selectors = events[event_name](state);
-          for (let selector in selectors) {
+    Object.entries(events)
+      .map(([event_name]) => [event_name, event_name.startsWith('on') ? event_name.substring(2) : event_name])
+      .filter(([event_name, evt]) => {
 
-            const fn = selectors[selector];
-            todos.push((state) => {
-              const elts = this.#container.querySelectorAll(selector);
-              return elts.forEach(target => fn(state, target));
-            });
-          }
-          return () => todos.forEach(todo => todo(this.state))
-        })(this.state);
+        if (evt !== 'update')
+          return true;
 
-        this.#onupdate(this.state);
+        const selectors = events[event_name](this.state);
 
-      } else {
+        this.#onupdate = () => Object.entries(selectors).map(([selector, fn]) => {
+          return (s) => this.container
+            .querySelectorAll(selector)
+            .forEach(target => fn(s, target));
+        }).forEach(fn => fn(this.state));
+
+        this.#onupdate();
+        return false;
+
+      }).forEach(([event_name, evt]) => {
 
         const selectors = events[event_name](this.actions);
 
-        if (!event_set)
-          this.#container.addEventListener(evt, e => {
+        this.container.addEventListener(evt, ({ target }) => {
 
-            Object.entries(selectors)
-              .filter(([selector]) => e.target.matches(selector))
-              .forEach(([selector]) => {
-                const fn = selectors[selector];
+          Object.entries(selectors)
+            .filter(([selector]) => target.matches(selector))
+            .forEach(([_, fn]) => {
+              fn(this.state, target);
+              this.#onupdate();
+            });
 
-                this.state = { ...(fn(this.state, e.target) || this.state) };
-                this.#onupdate({ state: this.state, view: this.view });
-              });
-
-          });
-
-        event_set = true;
-      }
-    }
+        });
+      });
 
     return this;
 
   }
 
-  get id() {
-    return this.#id;
-  }
-
-  set container(elt) {
-    this.#container = elt;
-  }
-
-  get container() {
-    return this.#container;
-  }
+  static #is_function = fn => ['[object AsyncFunction]', '[object Function]'].includes(({}).toString.call(fn));
 
 };
-
-export default App;

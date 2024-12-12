@@ -149,7 +149,7 @@ const //
     createUser(state) {
       i = i < sample.length - 1 ? i + 1 : 0;
       const { nom, prenom, age } = sample[i] || { nom: 'duff', prenom: 'john', age: 40 };
-      state.users.push({ id: unicId(7), nom, prenom, age });
+      state.users.push({ id: unicId(6), nom, prenom, age });
     },
 
     delUser(state, target) {
