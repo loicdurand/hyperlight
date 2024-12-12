@@ -23,7 +23,7 @@ class App {
     this.#id = ids.next().value;
 
     const ctnr = !container ? document : document.getElementById(container);
-    this.container = ctnr;
+    this.#container = ctnr;
 
     for (let option in options) {
       if (is_function(options[option])) {
@@ -31,8 +31,8 @@ class App {
           fn_name = option,
           fn_content = options[option];
 
-        this.actions[fn_name] = arg => {
-          const result = fn_content(arg);
+        this.actions[fn_name] = (arg, e) => {
+          const result = fn_content(arg, e);
           return this.state;
         }
 
@@ -49,6 +49,7 @@ class App {
 
     }
 
+    let event_set = false;
     for (let event_name in events) {
       const evt = event_name.startsWith('on') ? event_name.substring(2) : event_name;
       if (evt === 'update') {
@@ -62,7 +63,7 @@ class App {
 
             const fn = selectors[selector];
             todos.push((state) => {
-              const elts = this.container.querySelectorAll(selector);
+              const elts = this.#container.querySelectorAll(selector);
               return elts.forEach(elt => fn(elt, state));
             });
           }
@@ -73,19 +74,25 @@ class App {
 
       } else {
 
-        const targets = events[event_name](this.actions);
+        const selectors = events[event_name](this.actions);
 
-        for (let selector in targets) {
-          
-          const //
-            fn = targets[selector],
-            _targets = document.querySelectorAll(selector);
+        if (!event_set)
+          this.#container.addEventListener(evt, e => {
 
-          _targets.forEach(elt => elt.addEventListener(evt, () => {
-            this.state = { ...(fn(this.state) || this.state) };
-            this.#onupdate({ state: this.state, view: this.view });
-          }));
-        }
+            // targets = document.querySelectorAll(selector);
+
+            Object.entries(selectors)
+              .filter(([selector]) => e.target.matches(selector))
+              .forEach(([selector]) => {
+                const fn = selectors[selector];
+
+                this.state = { ...(fn(this.state, e) || this.state) };
+                this.#onupdate({ state: this.state, view: this.view });
+              });
+
+
+          });
+        event_set = true;
       }
     }
 

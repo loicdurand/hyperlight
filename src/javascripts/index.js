@@ -111,12 +111,15 @@ const table = new App({
     state.users.push({
       id: state.users.length, nom: 'doe', prenom: 'john', age: 20
     });
+    return state;
   },
 
-  delUser(state) {
-    console.log({ avant: state.users });
+  delUser(state, { target }) {
+    const { dataset: { index } } = target;
+    console.log({ index });
     state.users.pop();
     console.log({ apres: state.users });
+    return state;
 
   }
 
