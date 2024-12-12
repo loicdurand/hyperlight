@@ -43,7 +43,7 @@ class App {
         this.state[prop] = value;
       } else if (is_array(options[option])) {
         console.log({ option, val: options[option] });
-        this.state[option]= options[option];
+        this.state[option] = options[option];
         //this.#queue.push({ [option]: options[option] });
       }
 
@@ -54,13 +54,13 @@ class App {
       if (evt === 'update') {
         // this.#onupdate = state => events[event_name](state);
         this.#onupdate = ((state) => {
-          console.log({event_name});
+          console.log({ event_name });
           const //
             todos = [],
             selectors = events[event_name](state);
           for (let sel in selectors) {
             let selector = sel;
-            if (!/^#\.\[/.test(selector))
+            if (!/^[#\.\[]/.test(selector))
               selector = '#' + selector;
 
             const fn = selectors[sel];
@@ -78,15 +78,19 @@ class App {
 
         const targets = events[event_name](this.actions);
 
-        for (let id in targets) {
+        for (let sel in targets) {
+          let selector = sel;
+          if (!/^[#\.\[]/.test(selector))
+            selector = '#' + selector;
           const //
-            fn = targets[id],
-            target = document.getElementById(id);
+            fn = targets[sel],
+            t = !console.log([sel,selector]),
+            _targets = document.querySelectorAll(selector);
 
-          target.addEventListener(evt, () => {
+          _targets.forEach(elt => elt.addEventListener(evt, () => {
             this.state = { ...(fn(this.state) || this.state) };
             this.#onupdate({ state: this.state, view: this.view });
-          });
+          }));
         }
       }
     }

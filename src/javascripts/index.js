@@ -70,11 +70,9 @@ const //
       >Aucun résultat</td>
   </tr>
 `,
-  user_template = (user) =>/*html*/`
+  user_template = (user) => /*html*/`
   <tr>
-    <td>
-      <button class="user_delete">-</button>
-    </td>
+    <td>${user.id}</td>
     <td>${user.nom}</td>
     <td>${user.prenom}</td>
     <td>${user.age}</td>
@@ -87,14 +85,14 @@ const table = new App({
 
   events: {
     onclick: actions => ({
-      'create': actions.createUser,
+      '#create': actions.createUser,
       'delete': actions.delUser
     }),
 
     onupdate: () => ({
       //
       'no-result': (target, state) => target.classList[state.users.length ? 'add' : 'remove']('hidden'),
-      'users': (target, state) => {
+      '#users': (target, state) => {
         if (state.users.length)
           target.innerHTML = state.users.map(user_template).join('');
         else
@@ -108,7 +106,7 @@ const table = new App({
 
   createUser(state) {
     state.users.push({
-      nom: 'doe', prenom: 'john', age: 20
+      id: state.users.length, nom: 'doe', prenom: 'john', age: 20
     });
   },
 
