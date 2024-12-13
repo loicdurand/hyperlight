@@ -4,121 +4,43 @@ import '../stylesheets/style.scss';
 // JAVASCRIPT
 import App from './entities/Framework';
 
-const // 
-
-  unicId = (len) => Math.random().toString(36).slice(2, 2 + len),
-
-  app = new App({
-
-    container: 'app',
-
-    events: {
-
-      onclick: (actions) => ({
-        //
-        '#add_a': actions.add_a,
-        '#sub_a': actions.sub_a,
-        //
-        '#add_b': actions.add_b,
-        '#sub_b': actions.sub_b
-        //
-      }),
-
-      onupdate: () => ({
-        //
-        '#a': (state, target) => target.innerText = state.a,
-        '#b': (state, target) => target.innerText = state.b,
-        '#somme': (state, target) => target.value = state.somme,
-        '#produit': (state, target) => target.value = state.produit
-        //
-      })
-    },
-
-    a: 0,
-    b: 0,
-    somme: 0,
-    produit: 0,
-
-    add_a: (state) => {
-      state.a++;
-      state.somme++;
-      state.produit = state.a * state.b;
-    },
-
-    sub_a(state) {
-      state.a--;
-      state.somme--;
-      state.produit = state.a * state.b;
-    },
-
-    add_b: (state) => {
-      state.b++;
-      state.somme++;
-      state.produit = state.a * state.b;
-    },
-
-    sub_b(state) {
-      state.b--;
-      state.somme--;
-      state.produit = state.a * state.b;
-    }
-
-  });
 let i = 0;
 const // 
+  unicId = (len) => Math.random().toString(36).slice(2, 2 + len),
 
   sample = [
     { nom: 'doe', prenom: 'john', age: 30 },
     { nom: 'michel', prenom: 'blanc', age: 25 },
     { nom: 'jean', prenom: 'dujardin', age: 31 }
   ],
-  no_user_template = `
-  <tr>
-      <td
-        id="no-result"
-        colspan="4"
-      >Aucun résultat</td>
-  </tr>
-`,
-  user_template = (user) => /*html*/`
-    <tr>
-      <td>
-        <button data-index="${user.id}" class="del-this">-</button>
-      </td>
-      <td>${user.id}</td>
-      <td>${user.nom}</td>
-      <td>${user.prenom}</td>
-      <td>${user.age}</td>
-    </tr>
-  `,
-  // user = new App({
 
-  //   container: user_row,
+  user = (nom, prenom, age) => new App({
 
-  //   // id,
-  //   nom,
-  //   prenom,
-  //   age,
+    container: document.querySelector('template'),
 
-  //   remove(state, target) {
-  //     target.outerHTML = '';
-  //   },
+    id: unicId(7),
+    nom,
+    prenom,
+    age,
 
-  //   events: {
-  //     onupdate: () => ({
-  //       '.del-this': (state, target) => target.dataset.index = state._id,
-  //       '.user_id': (state, target) => target.innerText = state._id,
-  //       '.user_nom': (state, target) => target.innerText = nom,
-  //       '.user_prenom': (state, target) => target.innerText = state.prenom,
-  //       '.user_age': (state, target) => target.innerText = state.age,
-  //     })
-  //   }
+    remove({ target }) {
+      target.parentElement.parentElement.outerHTML = '';
+    },
 
-  // }),
+    events: {
+      onupdate: () => ({
+        '.del-this': ({ target, id }) => target.dataset.index = id,
+        '.user_id': ({ target, id }) => target.innerText = id,
+        '.user_nom': ({ target, nom }) => target.innerText = nom,
+        '.user_prenom': ({ target, prenom }) => target.innerText = prenom,
+        '.user_age': ({ target, age }) => target.innerText = age,
+      }),
+      onclick: actions => ({
+        '.del-this': actions.remove
+      })
+    }
 
-  // user_tpl = document.querySelector('template'),
-  // clone = user_tpl.content.cloneNode(true),
-  // [user_row] = clone.querySelectorAll('.user_row'),
+  }),
 
   table = new App({
 
@@ -127,18 +49,15 @@ const //
     events: {
       onclick: actions => ({
         '#create': actions.createUser,
-        '.del-this': actions.delUser
+        '.del-this': actions.deleteUser
       }),
 
       onupdate: () => ({
         //
-        'no-result': (state, target) => target.classList[state.users.length ? 'add' : 'remove']('hidden'),
-        '#users': (state, target) => {
-          if (state.users.length)
-            //target.innerHTML = state.users.map(user => user.container.outerHTML).join('');
-            target.innerHTML = state.users.map(user_template).join('');
-          else
-            target.innerHTML = no_user_template;
+        '.no-result': ({ target, users }) => target.classList[users.length ? 'add' : 'remove']('hidden'),
+        '#users-table--tbody': ({ target, users }) => {
+          if (users.length)
+            users.forEach(user => target.prepend(user.container));
         }
         //
       })
@@ -146,22 +65,23 @@ const //
 
     users: [],
 
-    createUser(state) {
+    createUser({ users }) {
       i = i < sample.length - 1 ? i + 1 : 0;
-      const { nom, prenom, age } = sample[i] || { nom: 'duff', prenom: 'john', age: 40 };
-      state.users.push({ id: unicId(6), nom, prenom, age });
+      const // 
+        { nom, prenom, age } = sample[i] || { nom: 'duff', prenom: 'john', age: 40 },
+        usr = user(nom, prenom, age);
+      users.push(usr);
     },
 
-    delUser(state, target) {
+    deleteUser({ target, users }) {
       const // 
         { dataset: { index } } = target,
-        position = state.users.findIndex(user => user.id === index);
-      state.users.splice(+position, 1);
+        position = users.findIndex((user) => {
+          // "user" étant une App, on peut accéder à son state
+          return user.state.id === index;
+        });
+      users.splice(position, 1);
     }
 
-  })
-
-
-window.app = app;
-
+  });
 

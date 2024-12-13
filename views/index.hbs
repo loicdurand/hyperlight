@@ -1,43 +1,13 @@
-<div
-  id="app"
-  class="row"
->
-  <div class="col s3">
-    <div id="a"></div>
-    <button id="sub_a">-</button>
-    <button id="add_a">+</button>
-  </div>
-
-  <div class="col s3">
-    <div id="b"></div>
-    <button id="sub_b">-</button>
-    <button id="add_b">+</button>
-  </div>
-
-  <div class="col s3">
-    <label for="somme">Somme</label>
-    <input
-      type="number"
-      id="somme"
-      name="somme"
-    >
-  </div>
-
-  <div class="col s3">
-    <label for="produit">Produit</label>
-    <input
-      type="number"
-      id="produit"
-      name="produit"
-    >
-  </div>
-
-</div>
-
 <template>
-  <tr class="user_row">
+  <tr
+    class="user_row"
+    data-index="_"
+  >
     <td>
-      <button data-index="_" class="del-this">-</button>
+      <button
+        data-index="_"
+        class="del-this"
+      >-</button>
     </td>
     <td class="user_id"></td>
     <td class="user_nom"></td>
@@ -56,7 +26,7 @@
     <button id="create">+</button>
   </div>
 
-  <table class="col s12">
+  <table id="users-table" class="col s12">
     <thead>
       <th>Action</th>
       <th>Index</th>
@@ -64,8 +34,14 @@
       <th>Prénom</th>
       <th>Âge</th>
     </thead>
-    <tbody id="users">
-
+    <tbody id="users-table--tbody">
+      <tr>
+        <td
+          class="no-result"
+          colspan="4"
+        >Aucun résultat
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
