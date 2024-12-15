@@ -23,10 +23,6 @@ const //
     prenom,
     age,
 
-    remove({ target }) {
-      target.parentElement.parentElement.outerHTML = '';
-    },
-
     events: {
       onupdate: () => ({
         '.del-this': ({ target, id }) => target.dataset.index = id,
@@ -34,9 +30,6 @@ const //
         '.user_nom': ({ target, nom }) => target.innerText = nom,
         '.user_prenom': ({ target, prenom }) => target.innerText = prenom,
         '.user_age': ({ target, age }) => target.innerText = age,
-      }),
-      onclick: actions => ({
-        '.del-this': actions.remove
       })
     }
 
@@ -79,7 +72,9 @@ const //
         position = users.findIndex((user) => {
           // "user" étant une App, on peut accéder à son state
           return user.state.id === index;
-        });
+        })
+
+      users[position].container.outerHTML = '';
       users.splice(position, 1);
     }
 
