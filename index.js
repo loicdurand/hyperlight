@@ -73,9 +73,7 @@ const //
     events: {
       onupdate: () => ({
         '#nb': ({ target }) => target.innerText = users_table.state.users.length,
-        '#pluriel': ({ target }) => target.innerText = users_table.state.users.length > 1 ?
-          'utilisateurs' :
-          'utilisateur'
+        '#pluriel': ({ target }) => target.innerText = users_table.state.users.length > 1 ? 's' : ''
       })
     }
   })
