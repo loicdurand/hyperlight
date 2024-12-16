@@ -1,0 +1,59 @@
+@charset "UTF-8";
+
+/* STARTER */
+* {
+  box-sizing: border-box;
+}
+
+h1,
+p {
+  margin-top: 0;
+}
+
+table th,
+table td {
+	text-align: center;
+}
+
+.row:before,
+.row:after {
+  display: table;
+  content: "";
+  clear: both;
+}
+
+.row {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+}
+
+.col {
+  /* goutières sur la grille */
+  padding: 0 0.75rem;
+  box-sizing: border-box;
+  float: left;
+  /* on donne aux éléments .col une position relative.
+  Ainsi, si on place un élément en absolute dans un .col, 
+  il se positionnera par rapport à cette balise */
+  position: relative;
+}
+
+.hidden {
+  display: none;
+}
+
+/* all screens
+========================================================================== */
+body {
+  font-size: 14px;
+  height: 100%;
+}
+
+.s12 {
+  width: 100%;
+}
+
+.s3 {
+  width: 25%;
+}
