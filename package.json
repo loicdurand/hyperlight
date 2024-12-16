@@ -1,13 +1,14 @@
 {
-  "name": "projet",
-  "version": "0.0.1",
-  "description": "",
-  "main": "Framework.js",
+  "name": "unviewed",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Un mini-framework JS inspiré de \"hyperapp\" (jorgebucaran/hyperapp) dans son fonctionnement - mais pas une copie pour autant ^^",
+  "main": "main.js",
   "devDependencies": {
-    "parcel-bundler": "^1.12.5"
+    "http-server": "^14.1.1"
   },
   "scripts": {
-    "parcel": "npx parcel index.html"
+    "start": "npx http-server"
   },
   "author": "",
   "license": "ISC"

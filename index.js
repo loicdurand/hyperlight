@@ -1,4 +1,4 @@
-import App from './Framework';
+import App from './main.js';
 
 let i = 0, j = 0;
 
