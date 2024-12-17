@@ -1,6 +1,6 @@
 'use strict';
 
-import App from 'https://esn.sh/loicdurand@wyper/main.js';
+import App from 'https://esn.sh/loicdurand@unviewed/main.js';
 
 let i = 0, j = 0;
 
