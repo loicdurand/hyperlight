@@ -7,7 +7,7 @@ Il y a quelques années, déjà, j'ai découvert le projet de "jorgebucaran", no
 
 Je l'ai largement utilisé dans mes petits projets, mais je voulais créer ma propre version, dépourvue du système de vue, d'où le nom de ce projet (Unviewed -> pas de vue).
 
-En efeft, le recours à JSX, bien que je l'apprécie, implique d'avoir du code "HTML-like" au milieu de son code JS, ce que je regrette.
+En effet, le recours à JSX, bien que je l'apprécie, implique d'avoir du code "HTML-like" au milieu de son code JS, ce que je regrette.
 
 Les framework plus gros, tels que Vue ou évidemment React, ne me satisfont pas sur ce point, dans la mesure où là encore, le code de la vue, se retrouve dans un template, parfois noyé au sein de notre JS.
 
@@ -15,18 +15,18 @@ Les framework plus gros, tels que Vue ou évidemment React, ne me satisfont pas 
 
 L'idée de ce framework, est de rester fidèle dans l'esprit à ce qui a été mis en place dans React ou même Hyperapp, avec un State stockant les variables, des Actions gérant les fonctions de raffraichissement de la donnée, et un Container dans lequel sera appliqué ce code. 
 
-La différence, c'est qu'au lieu de recharger un template entier à chaque fois que le State chane, on applique une succession de fonctions JS, comme on le fearit sans framework.
+La différence, c'est qu'au lieu de recharger un template entier à chaque fois que le State change, on applique une succession de fonctions JS, comme on le ferait sans framework.
 
 ## Mini-démo
 
 Lancez simplement `npm i unviewed` depuis votre projet.
 Premier constat: aucune dépendance n'est nécessaire.
 
-Dans le répertoire *node_module/unviewed*, vous trouverez un fichier ***index.html***. Ouvrez-le tel quel dans votre navigateur! Le code d'Unviewed se trouve dans le fichier ***main.js***, tandis que le code de la démo est dans ***index.js*** 
+Dans le répertoire *node_module/unviewed*, vous trouverez un fichier ***index.html***. Ouvrez-le tel quel dans votre navigateur! Le code d'Unviewed se trouve dans le fichier ***index.js***, tandis que le code de la démo est dans ***demo.js*** 
 
 ## Installation
 
-Exécutez simplement `npm i unviewed`, et vous êtes prêts! Aucune dépendance, pas besoin de bundler (Webpack, Parcel ou autre), le code est écrit en pure Javascript, et tient dans un seul fichier de 82 lignes de codes!
+Exécutez simplement `npm i unviewed` puis dans votre code javascript, importez avec `import App from 'unviewed'`, et vous êtes prêts! Aucune dépendance, pas besoin de bundler (Webpack, Parcel ou autre), le code est écrit en pure Javascript, et tient dans un seul fichier de 82 lignes de codes!
 
 ## Tutoriel
 
@@ -85,9 +85,9 @@ Notez une rangée permettant d'indiquer qu'il n'y a encore aucun utilisateur
   </div>
 ```
 
-Dans le fichier ***index.js***, commençons par importer le code de Unviewed:
+Dans le fichier ***demo.js***, commençons par importer le code de Unviewed:
 
-`import App from './main.js';`
+`import App from 'unviewed';`
 
 Puis, créons l'app liée à notre table:
 

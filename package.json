@@ -1,9 +1,9 @@
 {
   "name": "unviewed",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "description": "Un mini-framework JS inspiré de \"hyperapp\" (jorgebucaran/hyperapp) dans son fonctionnement - mais pas une copie pour autant ^^",
-  "main": "main.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/loicdurand/unviewed.git"

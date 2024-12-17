@@ -1,84 +1,123 @@
-'use strict';
+export default class App {
 
-import App from 'https://esm.sh/unviewed@1.0.5/main.js';
+  #update = () => void (0);
+  #container; // read-only
 
-let i = 0, j = 0;
+  state = {};
+  actions = {};
 
-const // 
+  constructor({ container = document, events = {}, ...state }) {
 
-  sample = [
-    { nom: 'doe', prenom: 'john', age: 30 },
-    { nom: 'michel', prenom: 'jean-pierre', age: 25 },
-    { nom: 'jean', prenom: 'bond', age: 31 },
-    { nom: 'pierre', prenom: 'quirouille', age: 31 }
-  ],
+    this.#container = this.#setContainer(container);
 
-  user_row = (state) => new App({
+    // Gestion des actions
+    Object.entries(state).forEach(([key, value]) => {
 
-    container: document.querySelector('template'),
+      if (!App.#is_function(value))
+        return this.state[key] = value;
 
-    ...state,
+      this.actions[key] = ({ target, ...state }) => {
+        value({ ...state, target });
+        return this.state;
+      };
 
-    remove(state) {
-      const //
-        { parent, entity } = state;
-      App.remove(entity);
-      App.update(parent, nb_users);
-    },
+    });
 
-    events: {
-      onupdate: () => ({
-        '.user_id': ({ target, id }) => target.innerText = id,
-        '.user_nom': ({ target, nom }) => target.innerText = nom,
-        '.user_prenom': ({ target, prenom }) => target.innerText = prenom,
-        '.user_age': ({ target, age }) => target.innerText = age,
-      }),
-      onclick: actions => ({
-        '.del-this': actions.remove
-      }),
-    }
+    // Gestions des events.onupdate
+    Object.entries(events)
+      .map(([event_name]) => [event_name, event_name.startsWith('on') ? event_name.substring(2) : event_name])
+      .filter(([event_name, evt]) => {
 
-  }),
+        if (evt !== 'update')
+          return true;
 
-  users_table = new App({
+        const selectors = events[event_name](this.state);
 
-    container: 'table-ctnr',
+        this.#update = () => Object.entries(selectors).map(([selector, fn]) => {
+          return (s) => this.#container
+            .querySelectorAll(selector)
+            .forEach(target => fn({ ...s, target }));
+        }).forEach(fn => fn(App.#no_null(this.state)));
 
-    users: [],
+        this.#update();
+        return false;
 
-    createUser({ users }) {
-      i = i < sample.length - 1 ? i + 1 : 0;
-      users.push(user_row({ id: j++, ...sample[i], parent: users_table }));
-      App.update(nb_users);
-    },
+        // Gestion des autres events ('click', 'keyup', etc...)
+      }).forEach(([event_name, evt]) => {
 
-    events: {
-      onclick: actions => ({
-        '#create': (state) => {
-          actions.createUser(state);
-        }
-      }),
+        const selectors = events[event_name](this.actions);
 
-      onupdate: () => ({
-        '#no-result': ({ target, users }) => target.classList[users.length ? 'add' : 'remove']('hidden'),
-        '#users-table--tbody': ({ target, users }) => users.forEach(user_row => target.prepend(user_row.container))
-      })
-    }
+        this.#container.addEventListener(evt, ({ target }) => {
 
-  }),
+          Object.entries(selectors)
+            .filter(([selector]) => target.matches(selector))
+            .forEach(([_, fn]) => {
+              fn({ ...App.#no_null(this.state), target, entity: this });
+              this.#update();
+            });
 
-  nb_users = new App({
+        });
+      });
 
-    container: 'nb-users',
+    return this;
 
-    events: {
-      onupdate: () => ({
-        '#nb': ({ target }) => target.innerText = users_table.state.users.length,
-        '#pluriel': ({ target }) => target.innerText = users_table.state.users.length > 1 ? 's' : ''
-      })
-    }
+  }
 
-  })
+  get container() {
+    return this.#container;
+  }
 
+  static remove = (...Apps) => Apps.forEach(app => {
+    app.#container.outerHTML = '';
+    app.state = null;
+  });
 
+  static update = (...Apps) => Apps.forEach(app => app.#update());
 
+  // Fonctions privées
+
+  #setContainer(ctnr) {
+
+    if (App.#is_element(ctnr) && ctnr.nodeName !== 'TEMPLATE')
+      return ctnr;
+
+    if (typeof ctnr === 'string' && ctnr !== 'template')
+      return document.getElementById(ctnr.startsWith('#') ? ctnr.substring(1) : ctnr)
+        || document.getElementsByTagName(ctnr)[0];
+
+    const // 
+      origin = ctnr.content.firstElementChild,
+      { nodeName } = origin,
+      copy = document.createElement(nodeName.toLowerCase());
+
+    for (const attr of origin.attributes)
+      copy.setAttribute(attr.name, attr.value);
+
+    copy.innerHTML = App.#trim(origin.innerHTML);
+    return copy;
+
+  }
+
+  static #trim = (str) => str.replaceAll(/^[\s\n\t]|[\s\n\t]$/g, '');
+
+  static #is_element = elt => elt instanceof Element || elt instanceof Document;
+
+  static #is_function = fn => ['[object AsyncFunction]', '[object Function]'].includes(({}).toString.call(fn));
+
+  static #is_array = arr => arr.constructor === [].constructor;
+
+  static #no_null = state => {
+
+    if (state === null)
+      return {};
+
+    Object.entries(state).forEach(([key, value]) => {
+      if (App.#is_array(value))
+        state[key] = value.filter(elt => elt instanceof App && elt.state === null ? false : true)
+    });
+
+    return state;
+
+  };
+
+};
