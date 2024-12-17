@@ -1,4 +1,6 @@
-import App from './main.js';
+'use strict';
+
+import App from 'https://esn.sh/loicdurand@wyper/main.js';
 
 let i = 0, j = 0;
 
@@ -20,9 +22,8 @@ const //
     remove(state) {
       const //
         { parent, entity } = state;
-      entity.remove();
-      parent.update();
-      nb_users.update();
+      App.remove(entity);
+      App.update(parent, nb_users);
     },
 
     events: {
@@ -48,7 +49,7 @@ const //
     createUser({ users }) {
       i = i < sample.length - 1 ? i + 1 : 0;
       users.push(user_row({ id: j++, ...sample[i], parent: users_table }));
-      nb_users.update();
+      App.update(nb_users);
     },
 
     events: {
@@ -59,7 +60,7 @@ const //
       }),
 
       onupdate: () => ({
-        '.no-result': ({ target, users }) => target.classList[users.length ? 'add' : 'remove']('hidden'),
+        '#no-result': ({ target, users }) => target.classList[users.length ? 'add' : 'remove']('hidden'),
         '#users-table--tbody': ({ target, users }) => users.forEach(user_row => target.prepend(user_row.container))
       })
     }
@@ -76,6 +77,7 @@ const //
         '#pluriel': ({ target }) => target.innerText = users_table.state.users.length > 1 ? 's' : ''
       })
     }
+
   })
 
 

@@ -1,6 +1,6 @@
 export default class App {
 
-  #onupdate = () => void (0);
+  #update = () => void (0);
   #container; // read-only
 
   state = {};
@@ -19,7 +19,7 @@ export default class App {
       this.actions[key] = ({ target, ...state }) => {
         value({ ...state, target });
         return this.state;
-      }
+      };
 
     });
 
@@ -33,13 +33,13 @@ export default class App {
 
         const selectors = events[event_name](this.state);
 
-        this.#onupdate = () => Object.entries(selectors).map(([selector, fn]) => {
+        this.#update = () => Object.entries(selectors).map(([selector, fn]) => {
           return (s) => this.#container
             .querySelectorAll(selector)
             .forEach(target => fn({ ...s, target }));
         }).forEach(fn => fn(App.#no_null(this.state)));
 
-        this.#onupdate();
+        this.#update();
         return false;
 
         // Gestion des autres events ('click', 'keyup', etc...)
@@ -53,7 +53,7 @@ export default class App {
             .filter(([selector]) => target.matches(selector))
             .forEach(([_, fn]) => {
               fn({ ...App.#no_null(this.state), target, entity: this });
-              this.#onupdate();
+              this.#update();
             });
 
         });
@@ -67,14 +67,12 @@ export default class App {
     return this.#container;
   }
 
-  remove() {
-    this.#container.outerHTML = '';
-    this.state = null;
-  }
+  static remove = (...Apps) => Apps.forEach(app => {
+    app.#container.outerHTML = '';
+    app.state = null;
+  });
 
-  update() {
-    this.#onupdate();
-  }
+  static update = (...Apps) => Apps.forEach(app => app.#update());
 
   // Fonctions privées
 

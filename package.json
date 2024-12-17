@@ -1,12 +1,9 @@
 {
   "name": "unviewed",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Un mini-framework JS inspiré de \"hyperapp\" (jorgebucaran/hyperapp) dans son fonctionnement - mais pas une copie pour autant ^^",
   "main": "main.js",
-  "devDependencies": {
-    "http-server": "^14.1.1"
-  },
   "scripts": {
     "start": "npx http-server -g"
   },
