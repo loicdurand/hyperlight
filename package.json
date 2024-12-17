@@ -1,6 +1,6 @@
 {
   "name": "unviewed",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "Un mini-framework JS inspiré de \"hyperapp\" (jorgebucaran/hyperapp) dans son fonctionnement - mais pas une copie pour autant ^^",
   "main": "main.js",
