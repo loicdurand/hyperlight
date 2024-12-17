@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* STARTER */
 * {
   box-sizing: border-box;
 }
@@ -29,13 +28,9 @@ table td {
 }
 
 .col {
-  /* goutières sur la grille */
   padding: 0 0.75rem;
   box-sizing: border-box;
   float: left;
-  /* on donne aux éléments .col une position relative.
-  Ainsi, si on place un élément en absolute dans un .col, 
-  il se positionnera par rapport à cette balise */
   position: relative;
 }
 
@@ -43,8 +38,6 @@ table td {
   display: none;
 }
 
-/* all screens
-========================================================================== */
 body {
   font-size: 14px;
   height: 100%;

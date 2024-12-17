@@ -1,9 +1,19 @@
 {
   "name": "unviewed",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "description": "Un mini-framework JS inspiré de \"hyperapp\" (jorgebucaran/hyperapp) dans son fonctionnement - mais pas une copie pour autant ^^",
   "main": "main.js",
-  "author": "Loïc DURAND <loicdurand.ld@gmail.com>",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loicdurand/unviewed.git"
+  },
+  "author": "Loïc DURAND",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/loicdurand/unviewed/issues"
+  },
+  "homepage": "https://github.com/loicdurand/unviewed#readme",
+  "dependencies": {},
+  "devDependencies": {}
 }

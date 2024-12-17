@@ -1,6 +1,6 @@
 'use strict';
 
-import App from 'https://esm.sh/unviewed@1.0.4/main.js';
+import App from 'https://esm.sh/unviewed@1.0.5/main.js';
 
 let i = 0, j = 0;
 
