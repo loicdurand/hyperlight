@@ -1,12 +1,9 @@
 {
   "name": "unviewed",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "description": "Un mini-framework JS inspiré de \"hyperapp\" (jorgebucaran/hyperapp) dans son fonctionnement - mais pas une copie pour autant ^^",
   "main": "main.js",
-  "scripts": {
-    "start": "npx http-server -g"
-  },
-  "author": "",
+  "author": "Loïc DURAND <loicdurand.ld@gmail.com>",
   "license": "ISC"
 }
