@@ -34,9 +34,11 @@ export default class App {
         const selectors = events[event_name](this.state);
 
         this.#update = () => Object.entries(selectors).map(([selector, fn]) => {
-          return (s) => this.#container
-            .querySelectorAll(selector)
-            .forEach(target => fn({ ...s, target }));
+          return (s) => this.#container.matches(selector) ?
+            fn({ ...s, target: this.#container }) :
+            this.#container
+              .querySelectorAll(selector)
+              .forEach(target => fn({ ...s, target }));
         }).forEach(fn => fn(App.#no_null(this.state)));
 
         this.#update();
